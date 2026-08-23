@@ -1,9 +1,6 @@
-local CG=game:GetService("CoreGui")local TS=game:GetService("TweenService")local PL=game.Players.LocalPlayer
-local IS=Instance.new("ScreenGui",CG)IS.IgnoreGuiInset=true local F=Instance.new("Frame",IS)F.Size=UDim2.new(1,0,1,100)F.Position=UDim2.new(0,0,0,-50)F.BackgroundColor3=Color3.fromRGB(10,10,10)
-local TI=Instance.new("TextLabel",F)TI.Size=UDim2.new(1,0,0,100)TI.Position=UDim2.new(0,0,0.45,0)TI.BackgroundTransparency=1 TI.Text="RIKIZERA"TI.TextColor3=Color3.fromRGB(255,255,255)TI.Font=Enum.Font.SourceSansBold TI.TextSize=60
-task.wait(5)local twInfo=TweenInfo.new(1.5,Enum.EasingStyle.Linear)TS:Create(F,twInfo,{BackgroundTransparency=1}):Play()local t2=TS:Create(TI,twInfo,{TextTransparency=1})t2:Play()t2.Completed:Connect(function()IS:Destroy()end)
-local BR=Instance.new("TextButton",CG)BR.Size=UDim2.new(0,65,0,65)BR.Position=UDim2.new(0,20,0,150)BR.BackgroundColor3=Color3.fromRGB(0,255,150)BR.Text="Rikizera"BR.TextColor3=Color3.fromRGB(0,0,0)BR.Font=Enum.Font.SourceSansBold BR.TextSize=14 BR.Active=true BR.Draggable=true Instance.new("UICorner",BR).CornerRadius=UDim.new(1,0)
-local MF=Instance.new("Frame",BR)MF.Size=UDim2.new(0,230,0,240)MF.Position=UDim2.new(0,80,0,0)MF.BackgroundColor3=Color3.fromRGB(25,25,25)MF.BorderSizePixel=0 MF.Visible=false Instance.new("UICorner",MF).CornerRadius=UDim.new(0,8)local St=Instance.new("UIStroke",MF)St.Color=Color3.fromRGB(0,255,150)St.Thickness=1.5
+local CG=game:GetService("CoreGui")local PL=game.Players.LocalPlayer
+local BR=Instance.new("TextButton",CG)BR.Size=UDim2.new(0,75,0,45)BR.Position=UDim2.new(0,20,0,150)BR.BackgroundColor3=Color3.fromRGB(0,0,0)BR.Text="RIKIZERA"BR.TextColor3=Color3.fromRGB(255,255,255)BR.Font=Enum.Font.SourceSansBold BR.TextSize=12 BR.Active=true BR.Draggable=true
+local MF=Instance.new("Frame",BR)MF.Size=UDim2.new(0,230,0,240)MF.Position=UDim2.new(0,85,0,0)MF.BackgroundColor3=Color3.fromRGB(25,25,25)MF.BorderSizePixel=0 MF.Visible=false Instance.new("UICorner",MF).CornerRadius=UDim.new(0,8)local St=Instance.new("UIStroke",MF)St.Color=Color3.fromRGB(0,255,150)St.Thickness=1.5
 local open=false BR.MouseButton1Click:Connect(function()open=not open;MF.Visible=open end)
 local AS=Instance.new("Frame",MF)AS.Size=UDim2.new(1,0,0,35)AS.BackgroundTransparency=1 local function makeTab(txt,pos)
 local b=Instance.new("TextButton",AS)b.Size=UDim2.new(0,68,0,26)b.Position=pos;b.BackgroundColor3=Color3.fromRGB(40,40,40)b.Text=txt;b.TextColor3=Color3.fromRGB(255,255,255)b.Font=Enum.Font.SourceSansBold;b.TextSize=10 Instance.new("UICorner",b).CornerRadius=UDim.new(0,4)return b
@@ -28,10 +25,8 @@ makeCheat("CORRER: OFF",P1,function(v)local h=PL.Character and PL.Character:Find
 makeCheat("SUPER PULO: OFF",P1,function(v)local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h.UseJumpPower=true h.JumpPower=v and 75 or 50 end end)
 local noclip=false makeCheat("NOCLIP WALLHACK: OFF",P1,function(v)noclip=v if not v and PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")then PL.Character.HumanoidRootPart.CanCollide=true end end)
 game:GetService("RunService").Stepped:Connect(function()if noclip and PL.Character then for _,p in pairs(PL.Character:GetChildren())do if p:IsA("BasePart")then p.CanCollide=false end end end end)
-
 local spider=false makeCheat("ANDAR NA PAREDE: OFF",P1,function(v)spider=v end)
 game:GetService("RunService").RenderStepped:Connect(function()if spider and PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")then local r=PL.Character.HumanoidRootPart local ray=Ray.new(r.Position,r.CFrame.LookVector*3)local hit=workspace:FindPartOnRayWithIgnoreList(ray,{PL.Character})if hit then r.Velocity=Vector3.new(r.Velocity.X,30,r.Velocity.Z)end end end)
-
 makeCheat("GRAVIDADE LUA: OFF",P2,function(v)workspace.Gravity=v and 20 or 196.2 end)
 makeCheat("GIRAR BONECO (SPIN): OFF",P2,function(v)local r=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r then if v then local av=Instance.new("BodyAngularVelocity",r)av.Name="RikizeraSpin"av.AngularVelocity=Vector3.new(0,50,0)av.MaxForce=Vector3.new(0,4e4,0)else if r:FindFirstChild("RikizeraSpin")then r.RikizeraSpin:Destroy()end end end end)
 local HUD=Instance.new("ScreenGui",CG)HUD.Name="RikizeraHUD" local LabelFF=Instance.new("TextLabel",HUD)LabelFF.Size=UDim2.new(0,300,0,40)LabelFF.Position=UDim2.new(0.5,-150,0.85,0)LabelFF.BackgroundTransparency=1 LabelFF.TextColor3=Color3.fromRGB(255,255,255)LabelFF.TextStrokeTransparency=0 LabelFF.Font=Enum.Font.SourceSansBold LabelFF.TextSize=20 LabelFF.Visible=false
@@ -53,4 +48,3 @@ if j==PL then return end local function tags()local c=j.Character or j.Character
 end
 game.Players.PlayerAdded:Connect(addEsp)for _,p in pairs(game.Players:GetPlayers())do addEsp(p)end
 L1.Parent.CanvasSize=UDim2.new(0,0,0,L1.AbsoluteContentSize.Y+10)L2.Parent.CanvasSize=UDim2.new(0,0,0,L2.AbsoluteContentSize.Y+10)
-
