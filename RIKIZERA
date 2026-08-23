@@ -1,0 +1,64 @@
+local CG=game:GetService("CoreGui")local TS=game:GetService("TweenService")local PL=game.Players.LocalPlayer
+local IS=Instance.new("ScreenGui",CG)IS.IgnoreGuiInset=true local F=Instance.new("Frame",IS)F.Size=UDim2.new(1,0,1,100)F.Position=UDim2.new(0,0,0,-50)F.BackgroundColor3=Color3.fromRGB(10,10,10)
+local TI=Instance.new("TextLabel",F)TI.Size=UDim2.new(1,0,0,100)TI.Position=UDim2.new(0,0,0.45,0)TI.BackgroundTransparency=1 TI.Text="RIKIZERA"TI.TextColor3=Color3.fromRGB(255,255,255)TI.Font=Enum.Font.SourceSansBold TI.TextSize=60
+task.wait(5)local twInfo=TweenInfo.new(1.5,Enum.EasingStyle.Linear)TS:Create(F,twInfo,{BackgroundTransparency=1}):Play()local t2=TS:Create(TI,twInfo,{TextTransparency=1})t2:Play()t2.Completed:Connect(function()IS:Destroy()end)
+local BR=Instance.new("TextButton",CG)BR.Size=UDim2.new(0,65,0,65)BR.Position=UDim2.new(0,20,0,150)BR.BackgroundColor3=Color3.fromRGB(0,255,150)BR.Text="Rikizera"BR.TextColor3=Color3.fromRGB(0,0,0)BR.Font=Enum.Font.SourceSansBold BR.TextSize=14 BR.Active=true BR.Draggable=true Instance.new("UICorner",BR).CornerRadius=UDim.new(1,0)
+local MF=Instance.new("Frame",BR)MF.Size=UDim2.new(0,240,0,260)MF.Position=UDim2.new(0,80,0,0)MF.BackgroundColor3=Color3.fromRGB(25,25,25)MF.BorderSizePixel=0 MF.Visible=false Instance.new("UICorner",MF).CornerRadius=UDim.new(0,8)local St=Instance.new("UIStroke",MF)St.Color=Color3.fromRGB(0,255,150)St.Thickness=1.5
+local open=false BR.MouseButton1Click:Connect(function()open=!open;MF.Visible=open end)
+local AS=Instance.new("ScrollingFrame",MF)AS.Size=UDim2.new(1,-10,0,35)AS.Position=UDim2.new(0,5,0,6)AS.BackgroundTransparency=1 AS.ScrollBarThickness=0 AS.CanvasSize=UDim2.new(0,360,0,0)local LA=Instance.new("UIListLayout",AS)LA.FillDirection=Enum.FillDirection.Horizontal LA.Padding=UDim.new(0,5)
+local function makeTab(txt)
+local b=Instance.new("TextButton",AS)b.Size=UDim2.new(0,65,0,26)b.BackgroundColor3=Color3.fromRGB(40,40,40)b.Text=txt;b.TextColor3=Color3.fromRGB(255,255,255)b.Font=Enum.Font.SourceSansBold;b.TextSize=10 Instance.new("UICorner",b).CornerRadius=UDim.new(0,4)return b
+end
+local b1=makeTab("PLAYER")local b2=makeTab("TROLL")local b3=makeTab("PLAYERS")local b4=makeTab("LUGARES")local b5=makeTab("VISUAL")b1.BackgroundColor3=Color3.fromRGB(0,255,150)b1.TextColor3=Color3.fromRGB(0,0,0)
+local function makePanel()
+local sf=Instance.new("ScrollingFrame",MF)sf.Size=UDim2.new(1,-16,1,-50)sf.Position=UDim2.new(0,8,0,45)sf.BackgroundTransparency=1 sf.ScrollBarThickness=2 sf.ScrollBarImageColor3=Color3.fromRGB(0,255,150)sf.CanvasSize=UDim2.new(0,0,0,0)local l=Instance.new("UIListLayout",sf)l.Padding=UDim.new(0,6)return sf,l
+end
+local P1,L1=makePanel()P1.Visible=true local P2,L2=makePanel()P2.Visible=false local P3,L3=makePanel()P3.Visible=false local P4,L4=makePanel()P4.Visible=false local P5,L5=makePanel()P5.Visible=false
+local function switch(btn,pan)
+b1.BackgroundColor3=Color3.fromRGB(40,40,40)b1.TextColor3=Color3.fromRGB(255,255,255)b2.BackgroundColor3=Color3.fromRGB(40,40,40)b2.TextColor3=Color3.fromRGB(255,255,255)b3.BackgroundColor3=Color3.fromRGB(40,40,40)b3.TextColor3=Color3.fromRGB(255,255,255)b4.BackgroundColor3=Color3.fromRGB(40,40,40)b4.TextColor3=Color3.fromRGB(255,255,255)b5.BackgroundColor3=Color3.fromRGB(40,40,40)b5.TextColor3=Color3.fromRGB(255,255,255)
+P1.Visible=false;P2.Visible=false;P3.Visible=false;P4.Visible=false;P5.Visible=false;btn.BackgroundColor3=Color3.fromRGB(0,255,150)btn.TextColor3=Color3.fromRGB(0,0,0)pan.Visible=true
+end
+b1.MouseButton1Click:Connect(function()switch(b1,P1)end)b2.MouseButton1Click:Connect(function()switch(b2,P2)end)b3.MouseButton1Click:Connect(function()switch(b3,P3)end)b4.MouseButton1Click:Connect(function()switch(b4,P4)end)b5.MouseButton1Click:Connect(function()switch(b5,P5)end)
+local function makeCheat(txt,parent,cb)
+local btn=Instance.new("TextButton",parent)btn.Size=UDim2.new(1,0,0,36)btn.BackgroundColor3=Color3.fromRGB(45,45,45)btn.Text=txt;btn.TextColor3=Color3.fromRGB(240,240,240)btn.Font=Enum.Font.SourceSansBold;btn.TextSize=13 Instance.new("UICorner",btn).CornerRadius=UDim.new(0,5)
+local act=false btn.MouseButton1Click:Connect(function()
+act=!act if string.find(txt,"OFF")then if act then btn.BackgroundColor3=Color3.fromRGB(30,80,50)btn.TextColor3=Color3.fromRGB(0,255,150)btn.Text=string.gsub(txt,"OFF","ON")else btn.BackgroundColor3=Color3.fromRGB(45,45,45)btn.TextColor3=Color3.fromRGB(240,240,240)btn.Text=txt end end cb(act)
+end)return btn
+end
+makeCheat("CORRER: OFF",P1,function(v)local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h.WalkSpeed=v and 100 or 16 end end)
+makeCheat("SUPER PULO: OFF",P1,function(v)local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h.UseJumpPower=true h.JumpPower=v and 120 or 50 end end)
+local noclip=false makeCheat("NOCLIP WALLHACK: OFF",P1,function(v)noclip=v if!v and PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")then PL.Character.HumanoidRootPart.CanCollide=true end end)
+game:GetService("RunService").Stepped:Connect(function()if noclip and PL.Character then for _,p in pairs(PL.Character:GetChildren())do if p:IsA("BasePart")then p.CanCollide=false end end end end)
+local infJ=false makeCheat("PULO INFINITO: OFF",P1,function(v)infJ=v end)
+game:GetService("UserInputService").JumpRequest:Connect(function()if infJ then local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h:ChangeState("Jumping")end end end)
+local fly=false makeCheat("VOAR (FLY): OFF",P1,function(v)fly=v local r=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r then if v then local bv=Instance.new("BodyVelocity",r)bv.Name="RikizeraFly"bv.Velocity=Vector3.new(0,0,0)bv.MaxForce=Vector3.new(4e4,4e4,4e4)else if r:FindFirstChild("RikizeraFly")then r.RikizeraFly:Destroy()end end end end)
+game:GetService("RunService").RenderStepped:Connect(function()if fly then local r=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")local cam=workspace.CurrentCamera if r and r:FindFirstChild("RikizeraFly")then local ctrl=game:GetService("ControlModule")r.RikizeraFly.Velocity=ctrl:GetMoveVector().X*cam.CFrame.RightVector*50+ctrl:GetMoveVector().Z*cam.CFrame.LookVector*-50 end end end)
+makeCheat("GRAVIDADE LUA: OFF",P2,function(v)workspace.Gravity=v and 25 or 196.2 end)
+local esp=false makeCheat("ESP WALLHACK: OFF",P2,function(v)esp=v for _,p in pairs(game.Players:GetPlayers())do if p.Character and p.Character:FindFirstChild("Head")and p.Character.Head:FindFirstChild("RikizeraESP")then p.Character.Head.RikizeraESP.Enabled=esp end end end)
+makeCheat("ATIVAR VISÃO NOTURNA",P2,function()game.Lighting.Ambient=Color3.fromRGB(255,255,255)end)
+makeCheat("NEBLINA DE TERROR",P2,function()game.Lighting.FogEnd=30 game.Lighting.FogColor=Color3.fromRGB(0,0,0)end)
+makeCheat("DELETAR O CHÃO DO MAPA",P2,function()if workspace:FindFirstChild("Baseplate")then workspace.Baseplate:Destroy()end end)
+local function tp(pos)local r=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r then r.CFrame=pos end end
+makeCheat("Teleportar: Banco / Cofre",P4,function()tp(CFrame.new(-442,23,-284))end)
+makeCheat("Teleportar: Delegacia / Prisão",P4,function()tp(CFrame.new(-365,24,-195))end)
+makeCheat("Teleportar: Praça Central",P4,function()tp(CFrame.new(-414,21,-73))end)
+makeCheat("Teleportar: Escola",P4,function()tp(CFrame.new(-224,22,-188))end)
+makeCheat("Teleportar: Concessionária",P4,function()tp(CFrame.new(-498,22,-54))end)
+makeCheat("Céu: Galáxia Estelar",P5,function()local s=Instance.new("Sky",game.Lighting)s.SkyboxBk="rbxassetid://159454299"s.SkyboxDn="rbxassetid://159454296"s.SkyboxFt="rbxassetid://159454293"s.SkyboxLf="rbxassetid://159454286"s.SkyboxRt="rbxassetid://159454290"s.SkyboxUp="rbxassetid://159454288"end)
+makeCheat("Clima: Nevasca Forte",P5,function()local p=Instance.new("ParticleEmitter",PL.Character.Head)p.Texture="rbxassetid://242292019"p.Speed=NumberRange.new(20)end)
+makeCheat("Filtro: Mundo Vermelho",P5,function()game.Lighting.ColorCorrection.TintColor=Color3.fromRGB(255,50,50)end)
+makeCheat("Horário: Meia-Noite",P5,function()game.Lighting.TimeOfDay="00:00:00"end)
+local function updateTpList()
+for _,f in pairs(P3:GetChildren())do if f:IsA("TextButton")then f:Destroy()end end
+for _,p in pairs(game.Players:GetPlayers())do if p!=PL then local b=Instance.new("TextButton",P3)b.Size=UDim2.new(1,0,0,32);b.BackgroundColor3=Color3.fromRGB(45,45,45)b.Text="Pular em: "..p.Name;b.TextColor3=Color3.fromRGB(230,230,230)b.Font=Enum.Font.SourceSansBold;b.TextSize=12 Instance.new("UICorner",b).CornerRadius=UDim.new(0,4)
+b.MouseButton1Click:Connect(function()local r1=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r1 and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then r1.CFrame=p.Character.HumanoidRootPart.CFrame*CFrame.new(0,0,3)end end)end end P3.CanvasSize=UDim2.new(0,0,0,L3.AbsoluteContentSize.Y+10)
+end
+game.Players.PlayerAdded:Connect(updateTpList)game.Players.PlayerRemoving:Connect(updateTpList)updateTpList()
+local function addEsp(j)
+if j==PL then return end local function tags()local c=j.Character or j.CharacterAdded:Wait()local head=c:WaitForChild("Head",5)if!head then return end if head:FindFirstChild("RikizeraESP")then head.RikizeraESP:Destroy()end local b=Instance.new("BillboardGui",head)b.Name="RikizeraESP"b.Size=UDim2.new(0,200,0,50)b.AlwaysOnTop=true b.ExtentsOffset=Vector3.new(0,3,0)b.Enabled=esp local l=Instance.new("TextLabel",b)l.Size=UDim2.new(1,0,1,0)l.BackgroundTransparency=1 l.Text=j.Name;l.TextColor3=Color3.fromRGB(0,255,150)l.TextStrokeTransparency=0;l.Font=Enum.Font.SourceSansBold;l.TextSize=15 end j.CharacterAdded:Connect(tags)if j.Character then tags()end
+end
+game.Players.PlayerAdded:Connect(addEsp)for _,p in pairs(game.Players:GetPlayers())do addEsp(p)end
+L1.Parent.CanvasSize=UDim2.new(0,0,0,L1.AbsoluteContentSize.Y+10)
+L2.Parent.CanvasSize=UDim2.new(0,0,0,L2.AbsoluteContentSize.Y+10)
+L4.Parent.CanvasSize=UDim2.new(0,0,0,L4.AbsoluteContentSize.Y+10)
+L5.Parent.CanvasSize=UDim2.new(0,0,0,L5.AbsoluteContentSize.Y+10)
