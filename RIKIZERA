@@ -1,0 +1,98 @@
+-- 1. CRIAR A TELA INVISÍVEL NO CELULAR (PARENT NO COREGUI PARA FICAR POR CIMA DE TUDO)
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MeuModMenu"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+-- 2. JANELA PRINCIPAL DO MENU (A CAIXINHA FLUTUANTE)
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 180, 0, 220) -- Altura original perfeita para 3 botões
+MenuFrame.Position = UDim2.new(0, 20, 0, 150) -- Posição inicial na tela
+MenuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Preto escuro estiloso
+MenuFrame.BorderSizePixel = 2
+MenuFrame.BorderColor3 = Color3.fromRGB(0, 255, 150) -- Borda verde neon
+MenuFrame.Active = true
+MenuFrame.Draggable = true -- Você pode arrastar o menu com o dedo!
+MenuFrame.Parent = ScreenGui
+
+-- TÍTULO DO MENU
+local Titulo = Instance.new("TextLabel")
+Titulo.Size = UDim2.new(1, 0, 0, 30)
+Titulo.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Titulo.Text = "RIKIZERA V4" -- Seu nome personalizado!
+Titulo.TextColor3 = Color3.fromRGB(255, 255, 255)
+Titulo.Font = Enum.Font.SourceSansBold
+Titulo.TextSize = 16
+Titulo.Parent = MenuFrame
+
+-- FUNÇÃO AUXILIAR PARA CRIAR OS BOTÕES RAPIDAMENTE
+local function criarBotao(nome, posicao, textoInicial)
+    local btn = Instance.new("TextButton")
+    btn.Name = nome
+    btn.Size = UDim2.new(0, 150, 0, 40)
+    btn.Position = posicao
+    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Começa branco (OFF)
+    btn.Text = textoInicial
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 14
+    btn.Parent = MenuFrame
+    return btn
+end
+
+-- CRIANDO OS 3 BOTÕES NA INTERFACE
+local BtnSpeed = criarBotao("BtnSpeed", UDim2.new(0, 15, 0, 45), "CORRER: OFF")
+local BtnJump = criarBotao("BtnJump", UDim2.new(0, 15, 0, 95), "SUPER PULO: OFF")
+local BtnGrav = criarBotao("BtnGrav", UDim2.new(0, 15, 0, 145), "GRAVIDADE LUA: OFF")
+
+-- 3. INTERRUPTORES DO SEU VOCABULÁRIO (ON / OFF)
+local speedAtivado = false
+local jumpAtivado = false
+local gravAtivada = false
+
+-- CLIQUE DO BOTÃO DE VELOCIDADE
+BtnSpeed.MouseButton1Click:Connect(function()
+    local boneco = game.Players.LocalPlayer.Character.Humanoid
+    speedAtivado = not speedAtivado
+    if speedAtivado then
+        boneco.WalkSpeed = 80 -- Valor do seu caderno
+        BtnSpeed.BackgroundColor3 = Color3.fromRGB(0, 255, 100) -- Fica verde
+        BtnSpeed.Text = "ATIVADO"
+    else
+        boneco.WalkSpeed = 16 -- Padrão
+        BtnSpeed.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Fica branco
+        BtnSpeed.Text = "CORRER: OFF"
+    end
+end)
+
+-- CLIQUE DO BOTÃO DO SUPER PULO
+BtnJump.MouseButton1Click:Connect(function()
+    local boneco = game.Players.LocalPlayer.Character.Humanoid
+    jumpAtivado = not jumpAtivado
+    if jumpAtivado then
+        boneco.UseJumpPower = true
+        boneco.JumpPower = 75 -- Seu pulo ajustado
+        BtnJump.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        BtnJump.Text = "ATIVADO"
+    else
+        boneco.JumpPower = 50 -- Padrão
+        BtnJump.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BtnJump.Text = "SUPER PULO: OFF"
+    end
+end)
+
+-- CLIQUE DO BOTÃO DE GRAVIDADE (MEXE NO MUNDO)
+BtnGrav.MouseButton1Click:Connect(function()
+    gravAtivada = not gravAtivada
+    if gravAtivada then
+        workspace.Gravity = 20 -- Sua gravidade zero!
+        BtnGrav.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        BtnGrav.Text = "ATIVADO"
+    else
+        workspace.Gravity = 196.2 -- Padrão do Roblox
+        BtnGrav.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BtnGrav.Text = "GRAVIDADE LUA: OFF"
+    end
+end)
+
+print("Mod Menu RIKIZERA V1 original carregado! ^_~")
