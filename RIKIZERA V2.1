@@ -1,0 +1,110 @@
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local IntroScreen = Instance.new("ScreenGui")
+IntroScreen.Name = "RikizeraIntro"
+IntroScreen.Parent = CoreGui
+local Fundo = Instance.new("Frame")
+Fundo.Size = UDim2.new(1, 0, 1, 0)
+Fundo.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Fundo.Parent = IntroScreen
+local TextoIntro = Instance.new("TextLabel")
+TextoIntro.Size = UDim2.new(1, 0, 0, 100)
+TextoIntro.Position = UDim2.new(0, 0, 0.4, 0)
+TextoIntro.BackgroundTransparency = 1
+TextoIntro.Text = "RIKIZERA"
+TextoIntro.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextoIntro.Font = Enum.Font.SourceSansBold
+TextoIntro.TextSize = 60
+TextoIntro.Parent = Fundo
+task.wait(5)
+local infoTween = TweenInfo.new(1.5, Enum.EasingStyle.Linear)
+local t1 = TweenService:Create(Fundo, infoTween, {BackgroundTransparency = 1})
+local t2 = TweenService:Create(TextoIntro, infoTween, {TextTransparency = 1})
+t1:Play()
+t2:Play()
+t1.Completed:Connect(function() IntroScreen:Destroy() end)
+
+local OrionLib = loadstring(game:HttpGet("https://githubusercontent.com"))()
+local Janela = OrionLib:MakeWindow({Name = "RIKIZERA MULTIHACK V9", HidePremium = true, SaveConfig = false})
+
+local TabPlayer = Janela:MakeTab({Name = "Player", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+local TabTroll = Janela:MakeTab({Name = "Troll", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+local TabTp = Janela:MakeTab({Name = "Teleporte", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+local TabEsp = Janela:MakeTab({Name = "ESP Wallhack", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+local walkspeedAtivado, jumppowerAtivado, noclipAtivado, espAtivado = false, false, false, false
+
+TabPlayer:AddToggle({Name = "Super Velocidade (80)", Default = false, Callback = function(v)
+    walkspeedAtivado = v
+    local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if h then h.WalkSpeed = walkspeedAtivado and 80 or 16 end
+end})
+
+TabPlayer:AddToggle({Name = "Super Pulo (100)", Default = false, Callback = function(v)
+    jumppowerAtivado = v
+    local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if h then h.UseJumpPower = true h.JumpPower = jumppowerAtivado and 100 or 50 end
+end})
+
+TabPlayer:AddToggle({Name = "NoClip (Atravessar Paredes)", Default = false, Callback = function(v) noclipAtivado = v end})
+
+game:GetService("RunService").Stepped:Connect(function()
+    if noclipAtivado and game.Players.LocalPlayer.Character then
+        for _, p in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if p:IsA("BasePart") then p.CanCollide = false end
+        end
+    end
+end)
+
+TabTroll:AddToggle({Name = "Gravidade da Lua (30)", Default = false, Callback = function(v) workspace.Gravity = v and 30 or 196.2 end})
+TabTroll:AddButton({Name = "Ativar Visão Noturna", Callback = function() game.Lighting.Ambient = Color3.fromRGB(255, 255, 255) end})
+
+local function atualizarListaTp()
+    for _, filho in pairs(TabTp:GetChildren()) do if filho:IsA("TextButton") then filho:Destroy() end end
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= game.Players.LocalPlayer then
+            TabTp:AddButton({Name = p.Name, Callback = function()
+                local meuCorpo = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if meuCorpo and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                    meuCorpo.CFrame = p.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+                end
+            end})
+        end
+    end
+end
+game.Players.PlayerAdded:Connect(atualizarListaTp)
+game.Players.PlayerRemoving:Connect(atualizarListaTp)
+atualizarListaTp()
+
+local function aplicarEsp(j)
+    if j == game.Players.LocalPlayer then return end
+    local function criarTags()
+        local c = j.Character or j.CharacterAdded:Wait()
+        local h = c:WaitForChild("Head", 5)
+        if not h then return end
+        if h:FindFirstChild("RikizeraESP") then h.RikizeraESP:Destroy() end
+        local b = Instance.new("BillboardGui")
+        b.Name = "RikizeraESP" b.Size = UDim2.new(0, 200, 0, 50)
+        b.AlwaysOnTop = true b.ExtentsOffset = Vector3.new(0, 3, 0)
+        b.Enabled = espAtivado b.Parent = h
+        local l = Instance.new("TextLabel")
+        l.Size = UDim2.new(1, 0, 1, 0) l.BackgroundTransparency = 1
+        l.Text = j.Name l.TextColor3 = Color3.fromRGB(0, 255, 150)
+        l.TextStrokeTransparency = 0 l.Font = Enum.Font.SourceSansBold
+        l.TextSize = 16 l.Parent = b
+    end
+    j.CharacterAdded:Connect(criarTags)
+    if j.Character then criarTags() end
+end
+game.Players.PlayerAdded:Connect(aplicarEsp)
+for _, p in pairs(game.Players:GetPlayers()) do aplicarEsp(p) end
+
+TabEsp:AddToggle({Name = "Ativar ESP Names", Default = false, Callback = function(v)
+    espAtivado = v
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p.Character and p.Character:FindFirstChild("Head") and p.Character.Head:FindFirstChild("RikizeraESP") then
+            p.Character.Head.RikizeraESP.Enabled = espAtivado
+        end
+    end
+end})
+OrionLib:Init()
