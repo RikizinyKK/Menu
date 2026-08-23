@@ -9,7 +9,6 @@ IntroScreen.Parent = CoreGui
 local Fundo = Instance.new("Frame")
 Fundo.Size = UDim2.new(1, 0, 1, 0)
 Fundo.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-Fundo.BackgroundTransparency = 0
 Fundo.Parent = IntroScreen
 
 local TextoIntro = Instance.new("TextLabel")
@@ -20,10 +19,8 @@ TextoIntro.Text = "RIKIZERA"
 TextoIntro.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextoIntro.Font = Enum.Font.SourceSansBold
 TextoIntro.TextSize = 60
-TextoIntro.TextTransparency = 0
 TextoIntro.Parent = Fundo
 
--- ANIMAÇÃO DE SUMIR APÓS 5 SEGUNDOS (FADE OUT)
 task.wait(5)
 local infoTween = TweenInfo.new(1.5, Enum.EasingStyle.Linear)
 local t1 = TweenService:Create(Fundo, infoTween, {BackgroundTransparency = 1})
@@ -34,36 +31,39 @@ t1.Completed:Connect(function()
     IntroScreen:Destroy()
 end)
 
--- 2. CARREGANDO A BIBLIOTECA PROFISSIONAL DE ABAS
-local OrionLib = loadstring(game:HttpGet("https://githubusercontent.com"))()
-local Janela = OrionLib:MakeWindow({Name = "RIKIZERA MULTIHACK V9", HidePremium = true, SaveConfig = false})
+-- 2. CARREGANDO A BIBLIOTECA KAVO (MOBILE FRIENDLY)
+local Kavo = loadstring(game:HttpGet("https://githubusercontent.com"))()
+local Janela = Kavo.CreateLib("RIKIZERA MULTIHACK V9", "Mint") -- Tema Verde Neon/Preto
 
--- 3. CRIANDO AS ABAS NO MENU
-local TabPlayer = Janela:MakeTab({Name = "Player", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-local TabTroll = Janela:MakeTab({Name = "Troll", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-local TabTp = Janela:MakeTab({Name = "Teleporte", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-local TabEsp = Janela:MakeTab({Name = "ESP Wallhack", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+-- 3. CRIANDO AS ABAS
+local AbaPlayer = Janela:NewTab("Player")
+local SecPlayer = AbaPlayer:NewSection("Atributos")
 
--- 4. CONFIGURAÇÕES DA ABA PLAYER
-local walkspeedAtivado = false
-local jumppowerAtivado = false
+local AbaTroll = Janela:NewTab("Troll")
+local SecTroll = AbaTroll:NewSection("Zoeira")
+
+local AbaTp = Janela:NewTab("Teleporte")
+local SecTp = AbaTp:NewSection("Locais Brookhaven")
+
+local AbaEsp = Janela:NewTab("ESP Wallhack")
+local SecEsp = AbaEsp:NewSection("Rastreador")
+
+-- 4. FUNÇÕES DA ABA PLAYER
 local noclipAtivado = false
 
-TabPlayer:AddToggle({Name = "Super Velocidade (80)", Default = false, Callback = function(v)
-    walkspeedAtivado = v
+SecPlayer:NewToggle("Super Velocidade (80)", "Te deixa rapido", function(v)
     local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if h then h.WalkSpeed = walkspeedAtivado and 80 or 16 end
-end})
+    if h then h.WalkSpeed = v and 80 or 16 end
+end)
 
-TabPlayer:AddToggle({Name = "Super Pulo (100)", Default = false, Callback = function(v)
-    jumppowerAtivado = v
+SecPlayer:NewToggle("Super Pulo (100)", "Pulo alto", function(v)
     local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if h then h.UseJumpPower = true h.JumpPower = jumppowerAtivado and 100 or 50 end
-end})
+    if h then h.UseJumpPower = true h.JumpPower = v and 100 or 50 end
+end)
 
-TabPlayer:AddToggle({Name = "NoClip (Atravessar Paredes)", Default = false, Callback = function(v)
+SecPlayer:NewToggle("NoClip (Atravessar Paredes)", "Vira fantasma", function(v)
     noclipAtivado = v
-end})
+end)
 
 game:GetService("RunService").Stepped:Connect(function()
     if noclipAtivado and game.Players.LocalPlayer.Character then
@@ -73,44 +73,44 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
-TabPlayer:AddButton({Name = "Forçar Sentar", Callback = function()
+SecPlayer:NewButton("Forçar Sentar", "Senta no chao", function()
     local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
     if h then h.Sit = true end
-end})
+end)
 
--- 5. CONFIGURAÇÕES DA ABA TROLL
-TabTroll:AddToggle({Name = "Gravidade da Lua (30)", Default = false, Callback = function(v)
+-- 5. FUNÇÕES DA ABA TROLL
+SecTroll:NewToggle("Gravidade da Lua (30)", "Zera a gravidade", function(v)
     workspace.Gravity = v and 30 or 196.2
-end})
+end)
 
-TabTroll:AddButton({Name = "Ativar Visão Noturna", Callback = function()
+SecTroll:NewButton("Ativar Visão Noturna", "Clareia tudo", function()
     game.Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-end})
+end)
 
-TabTroll:AddButton({Name = "Neblina de Terror", Callback = function()
+SecTroll:NewButton("Neblina de Terror", "Nevoatensa", function()
     game.Lighting.FogEnd = 30
     game.Lighting.FogColor = Color3.fromRGB(0, 0, 0)
-end})
+end)
 
--- 6. CONFIGURAÇÕES DA ABA TELEPORTE (BROOKHAVEN LOCAIS)
+-- 6. FUNÇÕES DA ABA TELEPORTE
 local function teleportarPara(pos)
     local root = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if root then root.CFrame = pos end
 end
 
-TabTp:AddButton({Name = "Teleportar para o Banco/Cofre", Callback = function()
+SecTp:NewButton("Banco / Cofre", "Vai pro cofre", function()
     teleportarPara(CFrame.new(-442, 23, -284))
-end})
+end)
 
-TabTp:AddButton({Name = "Teleportar para a Delegacia", Callback = function()
+SecTp:NewButton("Delegacia", "Vai pra prisao", function()
     teleportarPara(CFrame.new(-365, 24, -195))
-end})
+end)
 
-TabTp:AddButton({Name = "Teleportar para a Praça Central", Callback = function()
+SecTp:NewButton("Praça Central", "Vai pro centro", function()
     teleportarPara(CFrame.new(-414, 21, -73))
-end})
+end)
 
--- 7. CONFIGURAÇÕES DA ABA ESP
+-- 7. FUNÇÕES DA ABA ESP
 local espAtivado = false
 
 local function aplicarEsp(j)
@@ -139,13 +139,11 @@ end
 game.Players.PlayerAdded:Connect(aplicarEsp)
 for _, p in pairs(game.Players:GetPlayers()) do aplicarEsp(p) end
 
-TabEsp:AddToggle({Name = "Ativar ESP Names", Default = false, Callback = function(v)
+SecEsp:NewToggle("Ativar ESP Names", "Ver nicks", function(v)
     espAtivado = v
     for _, p in pairs(game.Players:GetPlayers()) do
         if p.Character and p.Character:FindFirstChild("Head") and p.Character.Head:FindFirstChild("RikizeraESP") then
             p.Character.Head.RikizeraESP.Enabled = espAtivado
         end
     end
-end})
-
-OrionLib:Init()
+end)
