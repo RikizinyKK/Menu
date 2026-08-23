@@ -1,0 +1,219 @@
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "RikizeraAbasMenu"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+local BotaoRedondo = Instance.new("TextButton")
+BotaoRedondo.Size = UDim2.new(0, 70, 0, 70)
+BotaoRedondo.Position = UDim2.new(0, 20, 0, 150)
+BotaoRedondo.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+BotaoRedondo.Text = "Rikizera"
+BotaoRedondo.TextColor3 = Color3.fromRGB(0, 0, 0)
+BotaoRedondo.Font = Enum.Font.SourceSansBold
+BotaoRedondo.TextSize = 16
+BotaoRedondo.Active = true
+BotaoRedondo.Draggable = true
+BotaoRedondo.Parent = ScreenGui
+
+local UICornerBotao = Instance.new("UICorner")
+UICornerBotao.CornerRadius = UDim.new(1, 0)
+UICornerBotao.Parent = BotaoRedondo
+
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 220, 0, 240)
+MenuFrame.Position = UDim2.new(0, 85, 0, 0)
+MenuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MenuFrame.BorderSizePixel = 2
+MenuFrame.BorderColor3 = Color3.fromRGB(0, 255, 150)
+MenuFrame.Visible = false
+MenuFrame.Parent = BotaoRedondo
+
+local menuAberto = false
+BotaoRedondo.MouseButton1Click:Connect(function()
+    menuAberto = not menuAberto
+    MenuFrame.Visible = menuAberto
+end)
+
+local function criarBotaoAba(nome, posicao, texto)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 64, 0, 28)
+    btn.Position = posicao
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    btn.Text = texto
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 10
+    btn.Parent = MenuFrame
+    return btn
+end
+
+local AbaPlayerBtn = criarBotaoAba("AbaPlayerBtn", UDim2.new(0, 8, 0, 10), "PLAYER")
+local AbaTrollBtn = criarBotaoAba("AbaTrollBtn", UDim2.new(0, 78, 0, 10), "TROLL")
+local AbaTpBtn = criarBotaoAba("AbaTpBtn", UDim2.new(0, 148, 0, 10), "TELEPORTE")
+
+AbaPlayerBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+AbaPlayerBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+local ConteudoPlayer = Instance.new("Frame")
+ConteudoPlayer.Size = UDim2.new(1, 0, 1, -45)
+ConteudoPlayer.Position = UDim2.new(0, 0, 0, 45)
+ConteudoPlayer.BackgroundTransparency = 1
+ConteudoPlayer.Visible = true
+ConteudoPlayer.Parent = MenuFrame
+
+local ConteudoTroll = Instance.new("Frame")
+ConteudoTroll.Size = UDim2.new(1, 0, 1, -45)
+ConteudoTroll.Position = UDim2.new(0, 0, 0, 45)
+ConteudoTroll.BackgroundTransparency = 1
+ConteudoTroll.Visible = false
+ConteudoTroll.Parent = MenuFrame
+
+local ConteudoTp = Instance.new("ScrollingFrame")
+ConteudoTp.Size = UDim2.new(1, -20, 1, -55)
+ConteudoTp.Position = UDim2.new(0, 10, 0, 45)
+ConteudoTp.BackgroundTransparency = 1
+ConteudoTp.Visible = false
+ConteudoTp.CanvasSize = UDim2.new(0, 0, 0, 0)
+ConteudoTp.ScrollBarThickness = 4
+ConteudoTp.Parent = MenuFrame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Padding = UDim.new(0, 5)
+UIListLayout.Parent = ConteudoTp
+
+local function alternarAbas(ativaBtn, ativaPainel)
+    AbaPlayerBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40); AbaPlayerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AbaTrollBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40); AbaTrollBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AbaTpBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40); AbaTpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ConteudoPlayer.Visible = false; ConteudoTroll.Visible = false; ConteudoTp.Visible = false
+    ativaBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+    ativaBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    ativaPainel.Visible = true
+end
+
+AbaPlayerBtn.MouseButton1Click:Connect(function() alternarAbas(AbaPlayerBtn, ConteudoPlayer) end)
+AbaTrollBtn.MouseButton1Click:Connect(function() alternarAbas(AbaTrollBtn, ConteudoTroll) end)
+AbaTpBtn.MouseButton1Click:Connect(function() alternarAbas(AbaTpBtn, ConteudoTp) end)
+
+local function criarBotaoCheat(nome, posicao, textoInicial, paiAbas)
+    local btn = Instance.new("TextButton")
+    btn.Name = nome; btn.Size = UDim2.new(0, 190, 0, 42); btn.Position = posicao
+    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255); btn.Text = textoInicial
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0); btn.Font = Enum.Font.SourceSansBold; btn.TextSize = 13
+    btn.Parent = paiAbas
+    return btn
+end
+
+local BtnSpeed = criarBotaoCheat("BtnSpeed", UDim2.new(0, 15, 0, 10), "CORRER: OFF", ConteudoPlayer)
+local BtnJump = criarBotaoCheat("BtnJump", UDim2.new(0, 15, 0, 65), "SUPER PULO: OFF", ConteudoPlayer)
+local BtnNoclip = criarBotaoCheat("BtnNoclip", UDim2.new(0, 15, 0, 120), "NOCLIP: OFF", ConteudoPlayer)
+local BtnGrav = criarBotaoCheat("BtnGrav", UDim2.new(0, 15, 0, 10), "GRAVIDADE LUA: OFF", ConteudoTroll)
+local BtnEsp = criarBotaoCheat("BtnEsp", UDim2.new(0, 15, 0, 65), "ESP WALLHACK: OFF", ConteudoTroll)
+
+local speedAtivado, jumpAtivado, gravAtivada, espAtivado, noclipAtivado = false, false, false, false, false
+
+BtnSpeed.MouseButton1Click:Connect(function()
+    local boneco = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if not boneco then return end
+    speedAtivado = not speedAtivado
+    if speedAtivado then boneco.WalkSpeed = 80; BtnSpeed.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnSpeed.Text = "CORRER: ON"
+    else boneco.WalkSpeed = 16; BtnSpeed.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnSpeed.Text = "CORRER: OFF" end
+end)
+
+BtnJump.MouseButton1Click:Connect(function()
+    local boneco = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if not boneco then return end
+    jumpAtivado = not jumpAtivado
+    if jumpAtivado then boneco.UseJumpPower = true; boneco.JumpPower = 75; BtnJump.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnJump.Text = "SUPER PULO: ON"
+    else boneco.JumpPower = 50; BtnJump.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnJump.Text = "SUPER PULO: OFF" end
+end)
+
+BtnGrav.MouseButton1Click:Connect(function()
+    gravAtivada = not gravAtivada
+    if gravAtivada then workspace.Gravity = 20; BtnGrav.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnGrav.Text = "GRAVIDADE LUA: ON"
+    else workspace.Gravity = 196.2; BtnGrav.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnGrav.Text = "GRAVIDADE LUA: OFF" end
+end)
+
+game:GetService("RunService").Stepped:Connect(function()
+    if noclipAtivado and game.Players.LocalPlayer.Character then
+        for _, peca in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if peca:IsA("BasePart") then peca.CanCollide = false end
+        end
+    end
+end)
+
+BtnNoclip.MouseButton1Click:Connect(function()
+    noclipAtivado = not noclipAtivado
+    if noclipAtivado then BtnNoclip.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnNoclip.Text = "NOCLIP: ON"
+    else BtnNoclip.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnNoclip.Text = "NOCLIP: OFF"
+        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
+        end
+    end
+end)
+
+local function atualizarListaTp()
+    for _, filho in pairs(ConteudoTp:GetChildren()) do
+        if filho:IsA("TextButton") then filho:Destroy() end
+    end
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= game.Players.LocalPlayer then
+            local BtnPlayer = Instance.new("TextButton")
+            BtnPlayer.Size = UDim2.new(1, -10, 0, 30); BtnPlayer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            BtnPlayer.Text = p.Name; BtnPlayer.TextColor3 = Color3.fromRGB(255, 255, 255); BtnPlayer.Font = Enum.Font.SourceSansBold
+            BtnPlayer.TextSize = 12; BtnPlayer.Parent = ConteudoTp
+            local UICornerBtn = Instance.new("UICorner")
+            UICornerBtn.CornerRadius = UDim.new(0, 4); UICornerBtn.Parent = BtnPlayer
+            BtnPlayer.MouseButton1Click:Connect(function()
+                local meuCorpo = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if meuCorpo and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                    meuCorpo.CFrame = p.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+                end
+            end)
+        end
+    end
+    ConteudoTp.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+end
+
+game.Players.PlayerAdded:Connect(atualizarListaTp)
+game.Players.PlayerRemoving:Connect(atualizarListaTp)
+atualizarListaTp()
+
+local localPlayer = game.Players.LocalPlayer
+local function aplicarEsp(jogador)
+    if jogador == localPlayer then return end
+    local function criarTags()
+        local char = jogador.Character or jogador.CharacterAdded:Wait()
+        local head = char:WaitForChild("Head", 5)
+        if not head then return end
+        if head:FindFirstChild("RikizeraESP") then head.RikizeraESP:Destroy() end
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "RikizeraESP"; billboard.Size = UDim2.new(0, 200, 0, 50)
+        billboard.AlwaysOnTop = true; billboard.ExtentsOffset = Vector3.new(0, 3, 0)
+        billboard.Enabled = espAtivado; billboard.Parent = head
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0); label.BackgroundTransparency = 1
+        label.Text = jogador.Name; label.TextColor3 = Color3.fromRGB(0, 255, 150)
+        label.TextStrokeTransparency = 0; label.Font = Enum.Font.SourceSansBold; label.TextSize = 16
+        label.Parent = billboard
+    end
+    jogador.CharacterAdded:Connect(criarTags)
+    if jogador.Character then criarTags() end
+end
+
+game.Players.PlayerAdded:Connect(aplicarEsp)
+for _, p in pairs(game.Players:GetPlayers()) do aplicarEsp(p) end
+
+BtnEsp.MouseButton1Click:Connect(function()
+    espAtivado = not espAtivado
+    if espAtivado then BtnEsp.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnEsp.Text = "ESP WALLHACK: ON"
+    else
+        BtnEsp.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BtnEsp.Text = "ESP WALLHACK: OFF"
+    end
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p.Character and p.Character:FindFirstChild("Head") and p.Character.Head:FindFirstChild("RikizeraESP") then
+            p.Character.Head.RikizeraESP.Enabled = espAtivado
+        end
+    end
+end)
