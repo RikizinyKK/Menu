@@ -47,4 +47,5 @@ local function addEsp(j)
 if j==PL then return end local function tags()local c=j.Character or j.CharacterAdded:Wait()local head=c:WaitForChild("Head",5)if not head then return end if head:FindFirstChild("RikizeraESP")then head.RikizeraESP:Destroy()end local b=Instance.new("BillboardGui",head)b.Name="RikizeraESP"b.Size=UDim2.new(0,200,0,50)b.AlwaysOnTop=true b.ExtentsOffset=Vector3.new(0,3,0)b.Enabled=esp local l=Instance.new("TextLabel",b)l.Size=UDim2.new(1,0,1,0)l.BackgroundTransparency=1 l.Text=j.Name;l.TextColor3=Color3.fromRGB(0,255,150)l.TextStrokeTransparency=0;l.Font=Enum.Font.SourceSansBold;l.TextSize=15 end j.CharacterAdded:Connect(tags)if j.Character then tags()end
 end
 game.Players.PlayerAdded:Connect(addEsp)for _,p in pairs(game.Players:GetPlayers())do addEsp(p)end
-L1.Parent.CanvasSize=UDim2.new(0,0,0,L1.AbsoluteContentSize.Y+10)L2.Parent.CanvasSize=UDim2.new(0,0,0,L2.AbsoluteContentSize.Y+10)
+L1.Parent.CanvasSize=UDim2.new(0,0,0,L1.AbsoluteContentSize.Y+10)L2.Parent.CanvasSize=UDim2.new(0,0,0,L2.AbsoluteContentSize.Y+10)P3.CanvasSize=UDim2.new(0,0,0,L3.AbsoluteContentSize.Y+10)
+
