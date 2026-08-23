@@ -6,33 +6,31 @@ ScreenGui.ResetOnSpawn = false
 
 -- 2. BOTÃO REDONDO PRINCIPAL (O ÍCONE DO MENU)
 local BotaoRedondo = Instance.new("TextButton")
-BotaoRedondo.Size = UDim2.new(0, 70, 0, 70) -- Tamanho do círculo (70x70)
-BotaoRedondo.Position = UDim2.new(0, 20, 0, 150) -- Posição na tela
-BotaoRedondo.BackgroundColor3 = Color3.fromRGB(0, 255, 150) -- Verde neon brabo
+BotaoRedondo.Size = UDim2.new(0, 70, 0, 70)
+BotaoRedondo.Position = UDim2.new(0, 20, 0, 150)
+BotaoRedondo.BackgroundColor3 = Color3.fromRGB(0, 255, 150) -- Verde neon
 BotaoRedondo.Text = "Rikizera"
-BotaoRedondo.TextColor3 = Color3.fromRGB(0, 0, 0) -- Texto preto destacado
+BotaoRedondo.TextColor3 = Color3.fromRGB(0, 0, 0)
 BotaoRedondo.Font = Enum.Font.SourceSansBold
 BotaoRedondo.TextSize = 16
 BotaoRedondo.Active = true
-BotaoRedondo.Draggable = true -- Você pode arrastar o círculo para onde quiser!
+BotaoRedondo.Draggable = true -- Pode arrastar o círculo com o dedo
 BotaoRedondo.Parent = ScreenGui
 
--- MÁGICA PARA DEIXAR O BOTÃO REAALMENTE REDONDO
 local UICornerBotao = Instance.new("UICorner")
-UICornerBotao.CornerRadius = UDim.new(1, 0) -- Transforma o quadrado em círculo perfeito
+UICornerBotao.CornerRadius = UDim.new(1, 0) -- Deixa redondo
 UICornerBotao.Parent = BotaoRedondo
 
 -- 3. JANELA DAS FUNÇÕES (A CAIXINHA QUE ABRE E FECHA)
 local MenuFrame = Instance.new("Frame")
-MenuFrame.Size = UDim2.new(0, 180, 0, 220) -- Tamanho perfeito para os 4 botões
-MenuFrame.Position = UDim2.new(0, 85, 0, 0) -- Abre colado do lado do botão redondo
-MenuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Preto escuro
+MenuFrame.Size = UDim2.new(0, 180, 0, 220)
+MenuFrame.Position = UDim2.new(0, 85, 0, 0)
+MenuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 MenuFrame.BorderSizePixel = 2
 MenuFrame.BorderColor3 = Color3.fromRGB(0, 255, 150)
-MenuFrame.Visible = false -- Começa FECHADO/ESCONDIDO de fábrica!
-MenuFrame.Parent = BotaoRedondo -- Preso ao botão redondo para se mover junto se você arrastar
+MenuFrame.Visible = false -- Começa fechado
+MenuFrame.Parent = BotaoRedondo
 
--- TÍTULO DA JANELA
 local Titulo = Instance.new("TextLabel")
 Titulo.Size = UDim2.new(1, 0, 0, 30)
 Titulo.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -42,7 +40,6 @@ Titulo.Font = Enum.Font.SourceSansBold
 Titulo.TextSize = 14
 Titulo.Parent = MenuFrame
 
--- FUNÇÃO AUXILIAR PARA CRIAR OS BOTÕES INTERNOS
 local function criarBotao(nome, posicao, textoInicial)
     local btn = Instance.new("TextButton")
     btn.Name = nome
@@ -57,20 +54,20 @@ local function criarBotao(nome, posicao, textoInicial)
     return btn
 end
 
--- OS 4 BOTÕES DO SEU CHEAT (AGORA NA CONTAGEM CERTA! KK)
+-- OS 4 BOTÕES DO SEU CHEAT
 local BtnSpeed = criarBotao("BtnSpeed", UDim2.new(0, 15, 0, 40), "CORRER: OFF")
 local BtnJump = criarBotao("BtnJump", UDim2.new(0, 15, 0, 83), "SUPER PULO: OFF")
 local BtnGrav = criarBotao("BtnGrav", UDim2.new(0, 15, 0, 126), "GRAVIDADE LUA: OFF")
 local BtnEsp = criarBotao("BtnEsp", UDim2.new(0, 15, 0, 169), "ESP WALLHACK: OFF")
 
--- INTERRUPTOR PARA ABRIR E FECHAR O MENU AO CLICAR EM "RIKIZERA"
+-- ABRE E FECHA O MENU AO CLICAR EM "RIKIZERA"
 local menuAberto = false
 BotaoRedondo.MouseButton1Click:Connect(function()
     menuAberto = not menuAberto
-    MenuFrame.Visible = menuAberto -- Troca entre visível e invisível
+    MenuFrame.Visible = menuAberto
 end)
 
--- 4. LOGICA DOS CHEATS (TUDO DO SEU CADERNO)
+-- 4. LÓGICA DOS ATRIBUTOS (DO SEU CADERNO)
 local speedAtivado = false
 local jumpAtivado = false
 local gravAtivada = false
@@ -96,56 +93,66 @@ BtnGrav.MouseButton1Click:Connect(function()
     else workspace.Gravity = 196.2; BtnGrav.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnGrav.Text = "GRAVIDADE LUA: OFF" end
 end)
 
--- MOTOR DO ESP (CÁLCULO MATEMÁTICO DO RASTREADOR)
-local camera = workspace.CurrentCamera
+-- 5. MOTOR DO ESP INFALÍVEL (MÉTODO BILLBOARDGUI)
 local localPlayer = game.Players.LocalPlayer
 
-local function criarEspParaJogador(vendedor)
-    if vendedor == localPlayer then return end
-    local linha = Drawing.new("Line")
-    linha.Visible = false
-    linha.Color = Color3.fromRGB(0, 255, 150)
-    linha.Thickness = 1.5
-    
-    local texto = Drawing.new("Text")
-    texto.Visible = false
-    texto.Color = Color3.fromRGB(255, 255, 255)
-    texto.Size = 14
-    texto.Center = true
-    texto.Outline = true
+local function aplicarEsp(jogador)
+    if jogador == localPlayer then return end
 
-    local conexao
-    conexao = game:GetService("RunService").RenderStepped:Connect(function()
-        if espAtivado and vendedor.Character and vendedor.Character:FindFirstChild("HumanoidRootPart") then
-            local rootPart = vendedor.Character.HumanoidRootPart
-            local posicaoTela, visivel = camera:WorldToViewportPoint(rootPart.Position)
-            if visivel then
-                linha.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y)
-                linha.To = Vector2.new(posicaoTela.X, posicaoTela.Y)
-                linha.Visible = true
-                texto.Position = Vector2.new(posicaoTela.X, posicaoTela.Y - 25)
-                texto.Text = vendedor.Name
-                texto.Visible = true
-                return
-            end
-        end
-        linha.Visible = false
-        texto.Visible = false
-        if not vendedor.Parent then
-            linha:Remove()
-            texto:Remove()
-            conexao:Disconnect()
-        end
-    end)
+    local function criarTags()
+        local char = jogador.Character or jogador.CharacterAdded:Wait()
+        local head = char:WaitForChild("Head", 5)
+        if not head then return end
+
+        -- Evita duplicar tags
+        if head:FindFirstChild("RikizeraESP") then head.RikizeraESP:Destroy() end
+
+        -- Cria a interface presa na cabeça do outro jogador
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "RikizeraESP"
+        billboard.Size = UDim2.new(0, 200, 0, 50)
+        billboard.AlwaysOnTop = true -- Faz aparecer através das paredes do mapa!
+        billboard.ExtentsOffset = Vector3.new(0, 3, 0) -- Fica um pouco acima do boneco
+        billboard.Enabled = espAtivado
+        billboard.Parent = head
+
+        -- Texto com o nome real do jogador
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1 -- Sem fundo cinza chato
+        label.Text = jogador.Name
+        label.TextColor3 = Color3.fromRGB(0, 255, 150) -- Verde neon igual o menu
+        label.TextStrokeTransparency = 0 -- Linha preta em volta da letra para dar destaque
+        label.Font = Enum.Font.SourceSansBold
+        label.TextSize = 16
+        label.Parent = billboard
+    end
+
+    jogador.CharacterAdded:Connect(criarTags)
+    if jogador.Character then criarTags() end
 end
 
-game.Players.PlayerAdded:Connect(criarEspParaJogador)
-for _, p in pairs(game.Players:GetPlayers()) do criarEspParaJogador(p) end
+-- Monitora o servidor inteiro
+game.Players.PlayerAdded:Connect(aplicarEsp)
+for _, p in pairs(game.Players:GetPlayers()) do aplicarEsp(p) end
 
+-- CLIQUE DO BOTÃO DO ESP
 BtnEsp.MouseButton1Click:Connect(function()
     espAtivado = not espAtivado
-    if espAtivado then BtnEsp.BackgroundColor3 = Color3.fromRGB(0, 255, 100); BtnEsp.Text = "ESP WALLHACK: ON"
-    else BtnEsp.BackgroundColor3 = Color3.fromRGB(255, 255, 255); BtnEsp.Text = "ESP WALLHACK: OFF" end
+    if espAtivado then
+        BtnEsp.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        BtnEsp.Text = "ESP WALLHACK: ON"
+    else
+        BtnEsp.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BtnEsp.Text = "ESP WALLHACK: OFF"
+    end
+    
+    -- Ativa/Desativa os nomes de todo mundo na hora do clique
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p.Character and p.Character:FindFirstChild("Head") and p.Character.Head:FindFirstChild("RikizeraESP") then
+            p.Character.Head.RikizeraESP.Enabled = espAtivado
+        end
+    end
 end)
 
-print("Mod Menu Redondo RIKIZERA V5 atualizado com sucesso na nuvem! *_*")
+print("Mod Menu RIKIZERA V5 atualizado com sucesso na nuvem!")
