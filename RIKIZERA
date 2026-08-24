@@ -1,51 +1,355 @@
-local CG=game:GetService("CoreGui")local PL=game.Players.LocalPlayer
-local BR=Instance.new("TextButton",CG)BR.Size=UDim2.new(0,75,0,45)BR.Position=UDim2.new(0,20,0,150)BR.BackgroundColor3=Color3.fromRGB(0,0,0)BR.Text="RIKIZERA"BR.TextColor3=Color3.fromRGB(255,255,255)BR.Font=Enum.Font.SourceSansBold BR.TextSize=12 BR.Active=true BR.Draggable=true
-local MF=Instance.new("Frame",BR)MF.Size=UDim2.new(0,230,0,240)MF.Position=UDim2.new(0,85,0,0)MF.BackgroundColor3=Color3.fromRGB(25,25,25)MF.BorderSizePixel=0 MF.Visible=false Instance.new("UICorner",MF).CornerRadius=UDim.new(0,8)local St=Instance.new("UIStroke",MF)St.Color=Color3.fromRGB(0,255,150)St.Thickness=1.5
-local open=false BR.MouseButton1Click:Connect(function()open=not open;MF.Visible=open end)
-local AS=Instance.new("Frame",MF)AS.Size=UDim2.new(1,0,0,35)AS.BackgroundTransparency=1 local function makeTab(txt,pos)
-local b=Instance.new("TextButton",AS)b.Size=UDim2.new(0,68,0,26)b.Position=pos;b.BackgroundColor3=Color3.fromRGB(40,40,40)b.Text=txt;b.TextColor3=Color3.fromRGB(255,255,255)b.Font=Enum.Font.SourceSansBold;b.TextSize=10 Instance.new("UICorner",b).CornerRadius=UDim.new(0,4)return b
-end
-local b1=makeTab("PLAYER",UDim2.new(0,6,0,6))local b2=makeTab("TROLL",UDim2.new(0,78,0,6))local b3=makeTab("PLAYERS",UDim2.new(0,150,0,6))b1.BackgroundColor3=Color3.fromRGB(0,255,150)b1.TextColor3=Color3.fromRGB(0,0,0)
-local function makePanel()
-local sf=Instance.new("ScrollingFrame",MF)sf.Size=UDim2.new(1,-16,1,-45)sf.Position=UDim2.new(0,8,0,40)sf.BackgroundTransparency=1 sf.ScrollBarThickness=2 sf.ScrollBarImageColor3=Color3.fromRGB(0,255,150)sf.CanvasSize=UDim2.new(0,0,0,0)local l=Instance.new("UIListLayout",sf)l.Padding=UDim.new(0,6)return sf,l
-end
-local P1,L1=makePanel()P1.Visible=true local P2,L2=makePanel()P2.Visible=false local P3,L3=makePanel()P3.Visible=false
-local function switch(btn,pan)
-b1.BackgroundColor3=Color3.fromRGB(40,40,40)b1.TextColor3=Color3.fromRGB(255,255,255)b2.BackgroundColor3=Color3.fromRGB(40,40,40)b2.TextColor3=Color3.fromRGB(255,255,255)b3.BackgroundColor3=Color3.fromRGB(40,40,40)b3.TextColor3=Color3.fromRGB(255,255,255)
-P1.Visible=false;P2.Visible=false;P3.Visible=false;btn.BackgroundColor3=Color3.fromRGB(0,255,150)btn.TextColor3=Color3.fromRGB(0,0,0)pan.Visible=true
-end
-b1.MouseButton1Click:Connect(function()switch(b1,P1)end)b2.MouseButton1Click:Connect(function()switch(b2,P2)end)b3.MouseButton1Click:Connect(function()switch(b3,P3)end)
-local function makeCheat(txt,parent,cb)
-local btn=Instance.new("TextButton",parent)btn.Size=UDim2.new(1,0,0,36)btn.BackgroundColor3=Color3.fromRGB(45,45,45)btn.Text=txt;btn.TextColor3=Color3.fromRGB(240,240,240)btn.Font=Enum.Font.SourceSansBold;btn.TextSize=13 Instance.new("UICorner",btn).CornerRadius=UDim.new(0,5)
-local act=false btn.MouseButton1Click:Connect(function()
-act=not act if string.find(txt,"OFF")then if act then btn.BackgroundColor3=Color3.fromRGB(30,80,50)btn.TextColor3=Color3.fromRGB(0,255,150)btn.Text=string.gsub(txt,"OFF","ON")else btn.BackgroundColor3=Color3.fromRGB(45,45,45)btn.TextColor3=Color3.fromRGB(240,240,240)btn.Text=txt end end cb(act)
-end)return btn
-end
-makeCheat("CORRER: OFF",P1,function(v)local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h.WalkSpeed=v and 80 or 16 end end)
-makeCheat("SUPER PULO: OFF",P1,function(v)local h=PL.Character and PL.Character:FindFirstChild("Humanoid")if h then h.UseJumpPower=true h.JumpPower=v and 75 or 50 end end)
-local noclip=false makeCheat("NOCLIP WALLHACK: OFF",P1,function(v)noclip=v if not v and PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")then PL.Character.HumanoidRootPart.CanCollide=true end end)
-game:GetService("RunService").Stepped:Connect(function()if noclip and PL.Character then for _,p in pairs(PL.Character:GetChildren())do if p:IsA("BasePart")then p.CanCollide=false end end end end)
-local spider=false makeCheat("ANDAR NA PAREDE: OFF",P1,function(v)spider=v end)
-game:GetService("RunService").RenderStepped:Connect(function()if spider and PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")then local r=PL.Character.HumanoidRootPart local ray=Ray.new(r.Position,r.CFrame.LookVector*3)local hit=workspace:FindPartOnRayWithIgnoreList(ray,{PL.Character})if hit then r.Velocity=Vector3.new(r.Velocity.X,30,r.Velocity.Z)end end end)
-makeCheat("GRAVIDADE LUA: OFF",P2,function(v)workspace.Gravity=v and 20 or 196.2 end)
-makeCheat("GIRAR BONECO (SPIN): OFF",P2,function(v)local r=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r then if v then local av=Instance.new("BodyAngularVelocity",r)av.Name="RikizeraSpin"av.AngularVelocity=Vector3.new(0,50,0)av.MaxForce=Vector3.new(0,4e4,0)else if r:FindFirstChild("RikizeraSpin")then r.RikizeraSpin:Destroy()end end end end)
-local HUD=Instance.new("ScreenGui",CG)HUD.Name="RikizeraHUD" local LabelFF=Instance.new("TextLabel",HUD)LabelFF.Size=UDim2.new(0,300,0,40)LabelFF.Position=UDim2.new(0.5,-150,0.85,0)LabelFF.BackgroundTransparency=1 LabelFF.TextColor3=Color3.fromRGB(255,255,255)LabelFF.TextStrokeTransparency=0 LabelFF.Font=Enum.Font.SourceSansBold LabelFF.TextSize=20 LabelFF.Visible=false
-local function updateTpList()
-for _,f in pairs(P3:GetChildren())do if f:IsA("Frame")then f:Destroy()end end
-for _,p in pairs(game.Players:GetPlayers())do
-local f=Instance.new("Frame",P3)f.Size=UDim2.new(1,0,0,32)f.BackgroundTransparency=1 Instance.new("UIListLayout",f).FillDirection=Enum.FillDirection.Horizontal
-local n=Instance.new("TextLabel",f)n.Size=UDim2.new(0,110,1,0)n.Text=p.Name;n.TextColor3=Color3.fromRGB(240,240,240)n.Font=Enum.Font.SourceSansBold;n.TextSize=10 n.BackgroundTransparency=1
-local t=Instance.new("TextButton",f)t.Size=UDim2.new(0,40,1,0)t.BackgroundColor3=Color3.fromRGB(30,80,50)t.Text="[TP]"t.TextColor3=Color3.fromRGB(0,255,150)t.Font=Enum.Font.SourceSansBold;t.TextSize=10 Instance.new("UICorner",t).CornerRadius=UDim.new(0,4)
-t.MouseButton1Click:Connect(function()local r1=PL.Character and PL.Character:FindFirstChild("HumanoidRootPart")if r1 and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then r1.CFrame=p.Character.HumanoidRootPart.CFrame*CFrame.new(0,0,3)end end)
-local spec=Instance.new("TextButton",f)spec.Size=UDim2.new(0,50,1,0)spec.BackgroundColor3=Color3.fromRGB(40,60,90)spec.Text="[VER]"spec.TextColor3=Color3.fromRGB(100,200,255)spec.Font=Enum.Font.SourceSansBold;spec.TextSize=9 Instance.new("UICorner",spec).CornerRadius=UDim.new(0,4)
-spec.MouseButton1Click:Connect(function()local cam=workspace.CurrentCamera if p==PL then cam.CameraSubject=PL.Character.Humanoid LabelFF.Visible=false else if p.Character and p.Character:FindFirstChild("Humanoid")then cam.CameraSubject=p.Character.Humanoid LabelFF.Text="ESPECTANDO: "..p.Name LabelFF.Visible=true end end end)
-end P3.CanvasSize=UDim2.new(0,0,0,L3.AbsoluteContentSize.Y+10)
-end
-game.Players.PlayerAdded:Connect(updateTpList)game.Players.PlayerRemoving:Connect(updateTpList)updateTpList()
-local esp=false makeCheat("ESP WALLHACK: OFF",P2,function(v)esp=v for _,p in pairs(game.Players:GetPlayers())do if p.Character and p.Character:FindFirstChild("Head")and p.Character.Head:FindFirstChild("RikizeraESP")then p.Character.Head.RikizeraESP.Enabled=esp end end end)
-local function addEsp(j)
-if j==PL then return end local function tags()local c=j.Character or j.CharacterAdded:Wait()local head=c:WaitForChild("Head",5)if not head then return end if head:FindFirstChild("RikizeraESP")then head.RikizeraESP:Destroy()end local b=Instance.new("BillboardGui",head)b.Name="RikizeraESP"b.Size=UDim2.new(0,200,0,50)b.AlwaysOnTop=true b.ExtentsOffset=Vector3.new(0,3,0)b.Enabled=esp local l=Instance.new("TextLabel",b)l.Size=UDim2.new(1,0,1,0)l.BackgroundTransparency=1 l.Text=j.Name;l.TextColor3=Color3.fromRGB(0,255,150)l.TextStrokeTransparency=0;l.Font=Enum.Font.SourceSansBold;l.TextSize=15 end j.CharacterAdded:Connect(tags)if j.Character then tags()end
-end
-game.Players.PlayerAdded:Connect(addEsp)for _,p in pairs(game.Players:GetPlayers())do addEsp(p)end
-L1.Parent.CanvasSize=UDim2.new(0,0,0,L1.AbsoluteContentSize.Y+10)L2.Parent.CanvasSize=UDim2.new(0,0,0,L2.AbsoluteContentSize.Y+10)P3.CanvasSize=UDim2.new(0,0,0,L3.AbsoluteContentSize.Y+10)
+-- Evita duplicar a interface caso execute o script novamente
+local antiga_ui = game:GetService("CoreGui"):FindFirstChild("XCHEAT_UI") or game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("XCHEAT_UI")
+if antiga_ui then antiga_ui:Destroy() end
 
+-- Serviços Principais
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- Variáveis de controle para as funções
+local speedEnabled = false
+local jumpEnabled = false
+local infiniteJumpEnabled = false
+local noclipEnabled = false
+local gravityEnabled = false
+local espEnabled = false
+local espectandoPlayer = nil
+
+local noclipConnection = nil
+local padraoGravidade = workspace.Gravity
+
+-- Instanciação da ScreenGui
+local targetGui = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "XCHEAT_UI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = targetGui
+
+------------------------------------------------------------------------
+-- SINALIZADOR ESTILO FREE FIRE (LETREIRO DE ESPECTAR)
+------------------------------------------------------------------------
+local SpectateLabel = Instance.new("TextLabel")
+SpectateLabel.Name = "SpectateNotification"
+SpectateLabel.Size = UDim2.new(0, 400, 0, 40)
+SpectateLabel.Position = UDim2.new(0.5, -200, 0.82, 0)
+SpectateLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+SpectateLabel.BackgroundTransparency = 0.3
+SpectateLabel.Text = "ASSISTINDO: NINGUÉM"
+SpectateLabel.TextColor3 = Color3.fromRGB(255, 165, 0)
+SpectateLabel.Font = Enum.Font.SourceSansBold
+SpectateLabel.TextSize = 20
+SpectateLabel.Visible = false
+SpectateLabel.Parent = ScreenGui
+
+local UICornerSpecLabel = Instance.new("UICorner")
+UICornerSpecLabel.CornerRadius = UDim.new(0, 8)
+UICornerSpecLabel.Parent = SpectateLabel
+
+local UnspectateBtn = Instance.new("TextButton")
+UnspectateBtn.Name = "UnspectateBtn"
+UnspectateBtn.Size = UDim2.new(0, 100, 0, 30)
+UnspectateBtn.Position = UDim2.new(0.5, -50, 0.88, 0)
+UnspectateBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+UnspectateBtn.Text = "VOLTAR"
+UnspectateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+UnspectateBtn.Font = Enum.Font.SourceSansBold
+UnspectateBtn.TextSize = 14
+UnspectateBtn.Visible = false
+UnspectateBtn.Parent = ScreenGui
+
+local UICornerUnspec = Instance.new("UICorner")
+UICornerUnspec.CornerRadius = UDim.new(0, 6)
+UICornerUnspec.Parent = UnspectateBtn
+------------------------------------------------------------------------
+-- 1. BOTÃO FLUTUANTE E BASE DO MENU PRINCIPAL
+------------------------------------------------------------------------
+local FloatingButton = Instance.new("TextButton")
+FloatingButton.Name = "ToggleButton"
+FloatingButton.Size = UDim2.new(0, 60, 0, 60)
+FloatingButton.Position = UDim2.new(0.05, 0, 0.4, 0)
+FloatingButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+FloatingButton.Text = "X"
+FloatingButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+FloatingButton.Font = Enum.Font.SourceSansBold
+FloatingButton.TextSize = 24
+FloatingButton.Parent = ScreenGui
+
+local UICornerFloat = Instance.new("UICorner")
+UICornerFloat.CornerRadius = UDim.new(1, 0)
+UICornerFloat.Parent = FloatingButton
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 420, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+local UICornerMain = Instance.new("UICorner")
+UICornerMain.CornerRadius = UDim.new(0, 10)
+UICornerMain.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "  XCHEAT"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 22
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = MainFrame
+
+------------------------------------------------------------------------
+-- 2. NAVEGAÇÃO POR ABAS
+------------------------------------------------------------------------
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(1, 0, 0, 35)
+TabContainer.Position = UDim2.new(0, 0, 0, 40)
+TabContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TabContainer.Parent = MainFrame
+
+local ContentContainer = Instance.new("Frame")
+ContentContainer.Size = UDim2.new(1, 0, 1, -75)
+ContentContainer.Position = UDim2.new(0, 0, 0, 75)
+ContentContainer.BackgroundTransparency = 1
+ContentContainer.Parent = MainFrame
+
+local tabs = {"PLAYER", "TROLL", "TELEPORTE", "ESPECTAR"}
+local tabFrames = {}
+local tabButtons = {}
+
+for i, tabName in ipairs(tabs) do
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1 / #tabs, 0, 1, 0)
+    TabButton.Position = UDim2.new((i - 1) / #tabs, 0, 0, 0)
+    TabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+    TabButton.Font = Enum.Font.SourceSansBold
+    TabButton.TextSize = 12
+    TabButton.Parent = TabContainer
+    tabButtons[tabName] = TabButton
+
+    local Page = Instance.new("ScrollingFrame")
+    Page.Size = UDim2.new(1, -20, 1, -20)
+    Page.Position = UDim2.new(0, 10, 0, 10)
+    Page.BackgroundTransparency = 1
+    Page.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Page.ScrollBarThickness = 6
+    Page.Visible = (i == 1)
+    Page.Parent = ContentContainer
+    tabFrames[tabName] = Page
+
+    local UIList = Instance.new("UIListLayout")
+    UIList.Padding = UDim.new(0, 8)
+    UIList.SortOrder = Enum.SortOrder.LayoutOrder
+    UIList.Parent = Page
+    
+    UIList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Page.CanvasSize = UDim2.new(0, 0, 0, UIList.AbsoluteContentSize.Y)
+    end)
+
+    if i == 1 then TabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+
+    TabButton.MouseButton1Click:Connect(function()
+        for name, frame in pairs(tabFrames) do
+            frame.Visible = (name == tabName)
+            tabButtons[name].BackgroundColor3 = (name == tabName) and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(30, 30, 30)
+        end
+    end)
+end
+
+FloatingButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+------------------------------------------------------------------------
+-- FUNÇÕES DE CRIAÇÃO DE COMPONENTES CUSTOMIZADOS
+------------------------------------------------------------------------
+local function CriarBotao(texto, aba, callback)
+    local Botao = Instance.new("TextButton")
+    Botao.Size = UDim2.new(1, 0, 0, 35)
+    Botao.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Botao.Text = texto
+    Botao.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Botao.Font = Enum.Font.SourceSans
+    Botao.TextSize = 16
+    Botao.Parent = tabFrames[aba]
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 5)
+    UICorner.Parent = Botao
+
+    Botao.MouseButton1Click:Connect(callback)
+    return Botao
+end
+
+local function CriarAlternador(texto, aba, callback)
+    local Container = Instance.new("Frame")
+    Container.Size = UDim2.new(1, 0, 0, 35)
+    Container.BackgroundTransparency = 1
+    Container.Parent = tabFrames[aba]
+
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(0.8, 0, 1, 0)
+    Label.BackgroundTransparency = 1
+    Label.Text = "  " .. texto
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSans
+    Label.TextSize = 16
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = Container
+
+    local Checkbox = Instance.new("TextButton")
+    Checkbox.Size = UDim2.new(0, 25, 0, 25)
+    Checkbox.Position = UDim2.new(1, -35, 0.5, -12)
+    Checkbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Checkbox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Checkbox.BorderSizePixel = 2
+    Checkbox.Text = ""
+    Checkbox.Parent = Container
+
+    local UICornerBox = Instance.new("UICorner")
+    UICornerBox.CornerRadius = UDim.new(0, 4)
+    UICornerBox.Parent = Checkbox
+
+    local estado = false
+    Checkbox.MouseButton1Click:Connect(function()
+        estado = not estado
+        Checkbox.BackgroundColor3 = estado and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(50, 50, 50)
+        callback(estado)
+    end)
+    return Checkbox
+end
+
+local function CriarInputNumero(texto, aba, callback)
+    local FrameInput = Instance.new("Frame")
+    FrameInput.Size = UDim2.new(1, 0, 0, 35)
+    FrameInput.BackgroundTransparency = 1
+    FrameInput.Parent = tabFrames[aba]
+
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(0.6, 0, 1, 0)
+    Label.BackgroundTransparency = 1
+    Label.Text = "  " .. texto
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSans
+    Label.TextSize = 16
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = FrameInput
+
+    local TextBox = Instance.new("TextBox")
+    TextBox.Size = UDim2.new(0.35, 0, 1, 0)
+    TextBox.Position = UDim2.new(0.65, 0, 0, 0)
+    TextBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    TextBox.Text = ""
+    TextBox.PlaceholderText = "Nº"
+    TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextBox.Font = Enum.Font.SourceSans
+    TextBox.TextSize = 16
+    TextBox.Parent = FrameInput
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 5)
+    UICorner.Parent = TextBox
+
+    TextBox.FocusLost:Connect(function()
+        local num = tonumber(TextBox.Text)
+        if num then callback(num) end
+    end)
+end
+------------------------------------------------------------------------
+-- SISTEMAS COMPORTAMENTAIS E INJEÇÃO DOS BOTÕES
+------------------------------------------------------------------------
+RunService.RenderStepped:Connect(function()
+    local boneco = LocalPlayer.Character
+    if boneco then
+        local humanoid = boneco:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            if speedEnabled then humanoid.WalkSpeed = 100 end
+            if jumpEnabled then humanoid.UseJumpPower = true humanoid.JumpPower = 70 end
+        end
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        local boneco = LocalPlayer.Character
+        local humanoid = boneco and boneco:FindFirstChildOfClass("Humanoid")
+        if humanoid then humanoid:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
+end)
+
+local function AplicarESP(player)
+    if player == LocalPlayer then return end
+    local function adicionarHighlight(character)
+        if not character then return end
+        local antigo = character:FindFirstChild("XCHEAT_ESP") if antigo then antigo:Destroy() end
+        local Highlight = Instance.new("Highlight")
+        Highlight.Name = "XCHEAT_ESP"
+        Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+        Highlight.FillTransparency = 0.5
+        Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+        Highlight.Enabled = espEnabled
+        Highlight.Parent = character
+    end
+    adicionarHighlight(player.Character) player.CharacterAdded:Connect(adicionarHighlight)
+end
+
+local function AtualizarTodosESPs()
+    for _, p in ipairs(Players:GetPlayers()) do if p.Character then local hl = p.Character:FindFirstChild("XCHEAT_ESP") if hl then hl.Enabled = espEnabled end end end
+end
+
+local function AssistirJogador(targetPlayer)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        espectandoPlayer = targetPlayer
+        Camera.CameraSubject = targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+        SpectateLabel.Text = "ASSISTINDO: " .. targetPlayer.DisplayName:upper()
+        SpectateLabel.Visible = true UnspectateBtn.Visible = true
+    end
+end
+
+local function ResetarCamera()
+    espectandoPlayer = nil local boneco = LocalPlayer.Character
+    if boneco and boneco:FindFirstChildOfClass("Humanoid") then Camera.CameraSubject = boneco:FindFirstChildOfClass("Humanoid") end
+    SpectateLabel.Visible = false UnspectateBtn.Visible = false
+end
+
+UnspectateBtn.MouseButton1Click:Connect(ResetarCamera)
+RunService.RenderStepped:Connect(function() if espectandoPlayer then if not espectandoPlayer.Parent or not espectandoPlayer.Character or not espectandoPlayer.Character:FindFirstChildOfClass("Humanoid") or espectandoPlayer.Character:FindFirstChildOfClass("Humanoid").Health <= 0 then ResetarCamera() end end end)
+
+local function TeleportarPara(targetPlayer)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local meuBoneco = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local meuHRP = meuBoneco:WaitForChild("HumanoidRootPart")
+        meuHRP.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+    end
+end
+
+-- CONFIGURAÇÃO DOS BOTÕES
+CriarAlternador("WalkSpeed (100)", "PLAYER", function(ativo) speedEnabled = ativo if not ativo and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.WalkSpeed = 16 end end)
+CriarAlternador("JumpPower (70)", "PLAYER", function(ativo) jumpEnabled = ativo if not ativo and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.JumpPower = 50 end end)
+CriarAlternador("Pulo Infinito", "PLAYER", function(ativo) infiniteJumpEnabled = ativo end)
+CriarAlternador("Noclip", "PLAYER", function(ativo) noclipEnabled = ativo if ativo then noclipConnection = RunService.Stepped:Connect(function() if noclipEnabled and LocalPlayer.Character then for _, part in pairs(LocalPlayer.Character:GetDescendants()) do if part:IsA("BasePart") and part.CanCollide then part.CanCollide = false end end end end) else if noclipConnection then noclipConnection:Disconnect() noclipConnection = nil end if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then LocalPlayer.Character.HumanoidRootPart.CanCollide = true end end end)
+CriarAlternador("ESP Jogadores", "PLAYER", function(ativo) espEnabled = ativo table.defer(AtualizarTodosESPs) end)
+CriarInputNumero("Definir HipHeight:", "PLAYER", function(valor) if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.HipHeight = valor end end)
+CriarBotao("Sentar (Sit)", "TROLL", function() if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.Sit = true end end)
+CriarAlternador("Gravidade (20)", "TROLL", function(ativo) gravityEnabled = ativo workspace.Gravity = ativo and 20 or padraoGravidade end)
+
+-- SINCRONIZAÇÃO DAS LISTAS
+local function AtualizarListasMecanicas()
+    for _, child in ipairs(tabFrames["TELEPORTE"]:GetChildren()) do if child:IsA("TextButton") then child:Destroy() end end
+    for _, child in ipairs(tabFrames["ESPECTAR"]:GetChildren()) do if child:IsA("TextButton") then child:Destroy() end end
+    for _, p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then CriarBotao(p.DisplayName .. " (@" .. p.Name .. ")", "TELEPORTE", function() TeleportarPara(p) end) CriarBotao("Espectar: " .. p.DisplayName, "ESPECTAR", function() AssistirJogador(p) end) end end
+end
+
+Players.PlayerAdded:Connect(function(p) AplicarESP(p) table.defer(AtualizarListasMecanicas) end)
+Players.PlayerRemoving:Connect(function() table.defer(AtualizarListasMecanicas) end)
+for _, p in ipairs(Players:GetPlayers()) do AplicarESP(p) end
+AtualizarListasMecanicas()
